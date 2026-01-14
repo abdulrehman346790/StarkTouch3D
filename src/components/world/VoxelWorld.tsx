@@ -3,7 +3,7 @@
 // Voxel World - Minecraft Grass Block (GLB Model)
 // ============================================
 
-import { useRef, useMemo, useEffect } from 'react';
+import { useRef, useMemo, useEffect, useState } from 'react';
 import { useGLTF } from '@react-three/drei';
 import {
     InstancedMesh,
@@ -27,34 +27,28 @@ useGLTF.preload('/models/grass_block.glb');
 export default function VoxelWorld() {
     const meshRef = useRef<InstancedMesh>(null);
     const blocks = useBlocks();
+    const [modelReady, setModelReady] = useState(false);
 
     // Load the GLB model
-    const { scene } = useGLTF('/models/grass_block.glb');
+    const gltf = useGLTF('/models/grass_block.glb');
 
     // Extract geometry and material from the loaded model
     const { geometry, material } = useMemo(() => {
-        let geo: BufferGeometry | null = null;
-        let mat: Material | Material[] | null = null;
+        let geo: BufferGeometry = new BoxGeometry(0.92, 0.92, 0.92);
+        let mat: Material | Material[] = new MeshLambertMaterial({ color: '#5D9E3E' });
 
-        scene.traverse((child) => {
-            if (child instanceof Mesh) {
-                geo = child.geometry;
-                mat = child.material;
-            }
-        });
-
-        // Fallback to simple box if model doesn't load properly
-        if (!geo) {
-            geo = new BoxGeometry(0.92, 0.92, 0.92);
-        }
-
-        // Fallback material if GLB material not found
-        if (!mat) {
-            mat = new MeshLambertMaterial({ color: '#5D9E3E' });
+        if (gltf && gltf.scene) {
+            gltf.scene.traverse((child) => {
+                if (child instanceof Mesh && child.geometry && child.material) {
+                    geo = child.geometry.clone(); // Clone to avoid issues
+                    mat = child.material;
+                }
+            });
+            setModelReady(true);
         }
 
         return { geometry: geo, material: mat };
-    }, [scene]);
+    }, [gltf]);
 
     // Edge geometry for outlines
     const edgeGeometry = useMemo(() => new EdgesGeometry(new BoxGeometry(0.92, 0.92, 0.92)), []);
@@ -96,7 +90,10 @@ export default function VoxelWorld() {
         }
 
         mesh.instanceMatrix.needsUpdate = true;
-    }, [blocks]);
+    }, [blocks, modelReady]);
+
+    // Don't render until model is ready
+    if (!modelReady) return null;
 
     return (
         <>
