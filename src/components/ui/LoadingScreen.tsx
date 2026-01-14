@@ -87,6 +87,19 @@ export default function LoadingScreen({ isReady }: LoadingScreenProps) {
                 Initializing Camera & Hand Tracking
             </p>
 
+            {/* Device Recommendation */}
+            <p style={{
+                color: '#FFD700',
+                fontSize: '0.85rem',
+                marginTop: '2rem',
+                padding: '10px 20px',
+                background: 'rgba(255, 215, 0, 0.1)',
+                borderRadius: '8px',
+                border: '1px solid rgba(255, 215, 0, 0.3)',
+            }}>
+                💻 For best experience, use a Laptop/PC with a Webcam
+            </p>
+
             {/* CSS Animations */}
             <style jsx>{`
                 @keyframes spin {
