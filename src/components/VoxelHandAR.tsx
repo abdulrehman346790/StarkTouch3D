@@ -12,6 +12,8 @@ import CameraFeed from '@/components/vision/CameraFeed';
 import HandLandmarkerComponent from '@/components/vision/HandLandmarker';
 import DebugOverlay from '@/components/vision/DebugOverlay';
 import RetroOverlay from '@/components/ui/RetroOverlay';
+import LoadingScreen from '@/components/ui/LoadingScreen';
+import ToastContainer, { Toasts } from '@/components/ui/ToastNotification';
 
 // Logic
 import { HandLandmarks } from '@/types';
@@ -126,17 +128,22 @@ export default function VoxelHandAR() {
                 resetNavigationReference();
             }
             if (k === 'c') {
-                if (confirm('Clear all blocks?')) {
-                    useVoxelStore.getState().resetBlocks();
-                }
+                useVoxelStore.getState().resetBlocks();
+                Toasts.cleared();
             }
             if (k === 's') {
-                useVoxelStore.getState().saveToLocalStorage();
-                alert('Game Saved! 💾');
+                Toasts.saving();
+                setTimeout(() => {
+                    useVoxelStore.getState().saveToLocalStorage();
+                    Toasts.saved();
+                }, 300);
             }
             if (k === 'l') {
-                useVoxelStore.getState().loadFromLocalStorage();
-                alert('Game Loaded! 📂');
+                Toasts.loading();
+                setTimeout(() => {
+                    useVoxelStore.getState().loadFromLocalStorage();
+                    Toasts.loaded();
+                }, 300);
             }
         };
 
@@ -235,6 +242,12 @@ export default function VoxelHandAR() {
 
             {/* Layer 5: UI Overlay (Full Screen) */}
             <RetroOverlay isReady={isReady} fps={fps} />
+
+            {/* Loading Screen */}
+            <LoadingScreen isReady={isReady} />
+
+            {/* Toast Notifications */}
+            <ToastContainer />
 
             <style jsx>{`
         .voxel-app {
