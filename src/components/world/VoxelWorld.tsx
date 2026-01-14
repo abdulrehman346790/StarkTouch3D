@@ -16,7 +16,7 @@ import {
     LineBasicMaterial,
     BoxGeometry,
 } from 'three';
-import { useBlocks, useVoxelStore } from '../../store/useVoxelStore';
+import { useBlocks } from '../../store/useVoxelStore';
 
 const MAX_BLOCKS = 2000;
 const dummy = new Object3D();
@@ -28,7 +28,6 @@ export default function VoxelWorld() {
     const meshRef = useRef<InstancedMesh>(null);
     const blocks = useBlocks();
     const [modelReady, setModelReady] = useState(false);
-    const setModelLoaded = useVoxelStore((state) => state.setModelLoaded);
 
     // Load the GLB model
     const gltf = useGLTF('/models/grass_block.glb');
@@ -46,11 +45,10 @@ export default function VoxelWorld() {
                 }
             });
             setModelReady(true);
-            setModelLoaded(true); // Update global store
         }
 
         return { geometry: geo, material: mat };
-    }, [gltf, setModelLoaded]);
+    }, [gltf]);
 
     // Edge geometry for outlines
     const edgeGeometry = useMemo(() => new EdgesGeometry(new BoxGeometry(0.92, 0.92, 0.92)), []);

@@ -27,14 +27,10 @@ interface ExtendedVoxelState extends VoxelState {
     sceneRotation: { x: number; y: number };
     cameraZoom: number;
 
-    // Loading states
-    modelLoaded: boolean;
-
     // Actions
     setRawCursorPosition: (x: number, y: number, z: number) => void;
     setSceneRotation: (x: number, y: number) => void;
     setCameraZoom: (zoom: number) => void;
-    setModelLoaded: (loaded: boolean) => void;
     removeBlockAt: (x: number, y: number, z: number) => void;
     resetBlocks: () => void;
     saveToLocalStorage: () => void;
@@ -49,7 +45,6 @@ export const useVoxelStore = create<ExtendedVoxelState>((set, get) => ({
     rawCursorPosition: { x: 0, y: 0, z: 0 },
     sceneRotation: { x: 0, y: 0 },
     cameraZoom: 15,
-    modelLoaded: false,
 
     // Actions
     addBlock: (x: number, y: number, z: number, color?: string) => {
@@ -116,10 +111,6 @@ export const useVoxelStore = create<ExtendedVoxelState>((set, get) => ({
 
     setCameraZoom: (zoom: number) => {
         set({ cameraZoom: Math.max(5, Math.min(30, zoom)) });
-    },
-
-    setModelLoaded: (loaded: boolean) => {
-        set({ modelLoaded: loaded });
     },
 
     resetBlocks: () => {
