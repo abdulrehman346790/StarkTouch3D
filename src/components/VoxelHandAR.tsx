@@ -15,6 +15,7 @@ import RetroOverlay from '@/components/ui/RetroOverlay';
 
 // Logic
 import { HandLandmarks } from '@/types';
+import { NavigationState, resetNavigationReference } from '@/logic/navigation';
 import {
     useVoxelStore,
     useSceneRotation,
