@@ -41,6 +41,10 @@ export default function VoxelHandAR() {
 
     const [isReady, setIsReady] = useState(false);
     const [showDebug, setShowDebug] = useState(true);
+    const modelLoaded = useVoxelStore((state) => state.modelLoaded);
+
+    // Combined ready state - everything must be loaded
+    const allReady = isReady && modelLoaded;
 
     // Screen Dimensions for responding to resize
     const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
@@ -243,8 +247,8 @@ export default function VoxelHandAR() {
             {/* Layer 5: UI Overlay (Full Screen) */}
             <RetroOverlay isReady={isReady} fps={fps} />
 
-            {/* Loading Screen */}
-            <LoadingScreen isReady={isReady} />
+            {/* Loading Screen - waits for EVERYTHING */}
+            <LoadingScreen isReady={allReady} />
 
             {/* Toast Notifications */}
             <ToastContainer />
