@@ -11,6 +11,7 @@ import {
     Mesh,
     BufferGeometry,
     Material,
+    MeshLambertMaterial,
     EdgesGeometry,
     LineBasicMaterial,
     BoxGeometry,
@@ -45,6 +46,11 @@ export default function VoxelWorld() {
         // Fallback to simple box if model doesn't load properly
         if (!geo) {
             geo = new BoxGeometry(0.92, 0.92, 0.92);
+        }
+
+        // Fallback material if GLB material not found
+        if (!mat) {
+            mat = new MeshLambertMaterial({ color: '#5D9E3E' });
         }
 
         return { geometry: geo, material: mat };
